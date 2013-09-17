@@ -19,6 +19,7 @@ while($result = mysql_fetch_array($request))
 {
     echo '<option value="'.$result['pays'].'">'.$result['pays'].'</option>';
 }
+echo '</select>';
 
 //Type de repas
 $sql ="SELECT type FROM Type ";
@@ -26,9 +27,10 @@ $request = mysql_query($sql);
 echo '<br><select>';
 while($result = mysql_fetch_array($request))
 {
-    echo '<option value="'.$result['type'].'">'.$result['Type'].'</option>';
+    echo '<option value="'.$result['Type'].'">'.$result['type'].'</option>';
 }
 mysql_close($connect);
+echo '</select>';
 ?>
 </body>
 </html>
