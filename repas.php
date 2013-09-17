@@ -11,12 +11,22 @@ mysql_select_db ('repas', $connect) ;
 <body>
 <h1>SA marche!</h1>
 <?php
+//NOm du pays
 $sql ="SELECT pays FROM Pays ";
 $request = mysql_query($sql);
 echo '<select>';
-while($result = mysql_fetch_assoc($request))
+while($result = mysql_fetch_array($request))
 {
     echo '<option value="'.$result['pays'].'">'.$result['pays'].'</option>';
+}
+
+//Type de repas
+$sql ="SELECT type FROM Type ";
+$request = mysql_query($sql);
+echo '<br><select>';
+while($result = mysql_fetch_array($request))
+{
+    echo '<option value="'.$result['type'].'">'.$result['Type'].'</option>';
 }
 mysql_close($connect);
 ?>
