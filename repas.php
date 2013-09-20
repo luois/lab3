@@ -1,28 +1,48 @@
 <?php
 $connect = mysql_connect ('localhost', 'root', 'admin123') or die("Impossible de se connecter à la base de données")or die("Impossible de se connecter à la base de données");
 
+
+$repas=$_REQUEST['nom'];
+$pays=$_REQUEST['listePays'];
+$Type=$_REQUEST['listeType'];
+$vege=$_REQUEST['Vege'];
+$prix=$_REQUEST['prix'];
 mysql_select_db ('repas', $connect) ;
 ?>
 
 <html>
-<meta http-equiv="content-type" content="text/html" charset="ISO-8859-1">
 <head>
-
     <link href="css/bootstrap.css" rel="stylesheet" media="screen">
     <title>Repas</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<form role="form">
+<p>
+<?php
+    if(isset($_REQUEST['OK'])){
+        if(isset($repas) && is_numeric($prix) && isset($vege)){
+            $commande = "INSERT INTO Repas (`idPays`, `idTypes`, `repas`, `vege`, `prix`) VALUES ('$pays','$Type','$repas','$vege','$prix')";
+            $request = mysql_query($commande);
+            //echo'Votre repas est : '.$repas.'et cout : '.$prix.'';
+        }
+        else
+        {
+            echo 'erreur de formatage de données';
+        }
+    }
+?>
+</p>
+<form role="form" action="repas.php" method="POST">
     <div class="form-actions">
         <div class="form-group">
             <label for="Pays">pays</label>
             <?php
-            $sql ="SELECT pays FROM Pays ";
+            $sql ="SELECT * FROM Pays ";
             $request = mysql_query($sql);
-            echo '<select>';
+            echo '<select name="listePays">';
             while($result = mysql_fetch_array($request))
             {
-                echo '<option value="'.$result['pays'].'">'.$result['pays'].'</option>';
+                echo '<option value="'.$result['*idPays'].'">'.$result['pays'].'</option>';
             }
             echo '</select>';
             ?>
@@ -30,33 +50,23 @@ mysql_select_db ('repas', $connect) ;
         <div class="form-group" >
             <label for="exampleInputPassword1">Service de repas</label>
             <?php
-            $sql ="SELECT type FROM Type ";
+            $sql ="SELECT * FROM Type ";
             $request = mysql_query($sql);
-            echo '<select>';
+            echo '<select name="listeType">';
             while($result = mysql_fetch_array($request))
             {
-                echo '<option value="'.$result['Type'].'">'.$result['type'].'</option>';
+                echo '<option value="'.$result['*idTypes'].'">'.$result['type'].'</option>';
             }
             echo '</select>';
             ?>
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Nom du repas</label>
-            <input class="form-control" id="focusedInput" type="text" class="form-control" id="exampleInputPassword1" placeholder="Entrer le repas voulu">
-            <?php
-            $sql ="SELECT Repas FROM repas ";
-            $request = mysql_query($sql);
-            echo '<br><select>';
-            while($result = mysql_fetch_array($request))
-            {
-                echo '<option value="'.$result['Type'].'">'.$result['type'].'</option>';
-            }
-            echo '</select>'
-            ?>
+            <input class="form-control" id="focusedInput" type="text" class="form-control" id="exampleInputPassword1" name="nom" placeholder="Entrer le repas voulu">
         </div>
         <div class="form-group">
-            <input type="radio" id="végétarien" name="Vege" value="Oui" /> Vegetarien
-            <input type="radio" id="Canivore" name="Vege" value="Non" /> Carnivore
+            <input type="radio" id="végétarien" name="Vege" value="1" /> Végétarien
+            <input type="radio" id="Canivore" name="Vege" value="0" /> Carnivore
             <?php
             echo $_vegechoix['choix'];
             ?>
@@ -64,17 +74,7 @@ mysql_select_db ('repas', $connect) ;
         <br>
         <div class="form-group">
             <label for="exampleInputPassword1">Prix</label>
-            <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Entrer le prix">
-            <?php
-            $sql ="SELECT Repas FROM prix ";
-            $request = mysql_query($sql);
-            echo '<br><select>';
-            while($result = mysql_fetch_array($request))
-            {
-                echo '<option value="'.$result['Type'].'">'.$result['type'].'</option>';
-            }
-            echo '</select>';
-            ?>
+            <input type="text" class="form-control" id="exampleInputPassword1" name="prix" placeholder="Entrer le prix">
         </div>
         <div class="form-group">
             <label for="exampleInputFile"></label>
@@ -87,8 +87,10 @@ mysql_select_db ('repas', $connect) ;
 
     </div>
 
-    <button type="button" class="btn btn-primary btn-lg btn-block">A la Bouffe!!!</button>
-    <button type="button" class="btn btn-default btn-lg btn-block">Annuler</button>
+    <?php
+    ?>
+    <button type="submit" class="btn btn-primary btn-lg btn-block" name="OK">A la Bouffe!!!</button>
+    <button type="button" class="btn btn-default btn-lg btn-block" name="CANCEL">Annuler</button>
 </form>
 
 
